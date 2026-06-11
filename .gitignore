@@ -1,0 +1,30 @@
+# OS metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor / IDE configs (may contain local paths)
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Local agent settings (may contain user-specific data)
+.claude/settings.local.json
+.claude/projects/
+*.local.json
+*.local.md
+
+# Dependencies / build artifacts (none expected, defensive)
+node_modules/
+dist/
+build/
+__pycache__/
+*.pyc
+
+# Logs and temp files
+*.log
+*.tmp
+.env
+.env.*

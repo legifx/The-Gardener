@@ -1,0 +1,44 @@
+# {{PROJECT_NAME}}
+
+<!-- Project memory file. Hard budget: 5,000 tokens total.
+     Update at session end, max 10 lines of delta. Current truth only — no history. -->
+
+## Summary
+<!-- 3-5 lines: what this project is, who uses it, current phase -->
+{{ONE_PARAGRAPH_SUMMARY}}
+
+## Stack
+- Language: {{LANGUAGE_AND_VERSION}}
+- Framework: {{FRAMEWORK_AND_VERSION}}
+- Database: {{DATABASE}}
+- Deploy: {{DEPLOY_TARGET}}
+
+## Commands
+- Build: `{{BUILD_COMMAND}}`
+- Test: `{{TEST_COMMAND}}`
+- Lint: `{{LINT_COMMAND}}`
+- Run locally: `{{RUN_COMMAND}}`
+
+## Conventions
+<!-- Only the ones an agent would get wrong without being told -->
+- {{CONVENTION_1}}
+- {{CONVENTION_2}}
+
+## Read allowlist / denylist
+- Worth reading: {{KEY_SOURCE_DIRS}}
+- Never read: node_modules/, dist/, build/, lockfiles, {{PROJECT_SPECIFIC_FORBIDDEN}}
+
+## State
+<!-- Knowledge-graph-light: entities + relations, one per line.
+     Update relations when they change; delete dead entities. -->
+- {{ENTITY_A}} -> {{RELATION}} -> {{ENTITY_B}}
+- {{SERVICE}} -> depends on -> {{DEPENDENCY}}
+
+## Open TODOs
+<!-- Max ~10, prune completed ones -->
+- [ ] {{TODO_1}}
+- [ ] {{TODO_2}}
+
+## Known bugs / gotchas
+<!-- Things that bite, with the workaround -->
+- {{GOTCHA_1}} — workaround: {{WORKAROUND_1}}
