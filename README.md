@@ -52,6 +52,46 @@ being resident. Details: [modules/enforcement.md](modules/enforcement.md).
 
 ## Installation
 
+### Codeless — paste this prompt into your agent
+
+No terminal needed: paste the block below into Claude Code (or any agent
+with shell access) and it installs The Gardener for you — either fully
+automatic, or tailored to your answers.
+
+```text
+Install "The Gardener" (token-saver), an agent skill that enforces token
+discipline via deterministic hooks.
+Repo: https://github.com/legifx/The-Gardener
+
+STEP 1 — Before doing anything, ask me exactly one question and wait:
+  How do you want to set this up?
+  (a) "Grill me" — ask me a few quick questions (custom setup)
+  (b) "Let your Agent do it for you" — you pick sensible defaults
+
+STEP 2a — If I picked "Grill me", ask me (one short message, then wait):
+  1. Which harness? Claude Code / markdown-skill harness (e.g. Hermes) / both
+  2. Where should the repo be cloned? (default: ~/tools/The-Gardener)
+  3. Always-on rules via SessionStart hook (default) or written into my
+     memory file (CLAUDE.md / SOUL.md → install flag --with-memory-block)?
+  4. Strict mode too? (additionally blocks unbounded `git log` and
+     unfiltered test runs via GARDENER_STRICT=1)
+
+STEP 2b — If I picked "Let your Agent do it for you", use the defaults:
+  Claude Code only, clone to ~/tools/The-Gardener, hook-based rules,
+  no strict mode.
+
+STEP 3 — Execute:
+  git clone https://github.com/legifx/The-Gardener.git <chosen dir>
+  cd <chosen dir> && ./install.sh   # add --hermes / --all /
+                                    # --with-memory-block per my answers
+  bash hooks/test_guard.sh          # all self-tests must pass
+  If strict mode was chosen, persist GARDENER_STRICT=1 in my environment.
+
+STEP 4 — Verify & report: show the hooks now registered in
+  ~/.claude/settings.json, confirm the self-test results, and remind me
+  to restart my agent session so the hooks take effect.
+```
+
 ### Claude Code (skill + enforcement hooks)
 
 ```bash
@@ -122,6 +162,11 @@ Dumps) und nennt dabei die günstigere Alternative; ein `SessionStart`-Hook
 lädt die Kernregeln automatisch in jede Session. Läuft 24/7 ohne Daemon,
 kostet 0 Token bis zum Verstoß. Notausgänge: `GARDENER_DISABLE=1`,
 `GARDENER_ALLOW=1`. Deinstallation: `./uninstall.sh`.
+
+Codeless installieren: den Copy-Paste-Prompt oben im Abschnitt
+„Installation" in den eigenen Agenten einfügen — er fragt zuerst
+„Grill me" (individuelles Setup per Rückfragen) oder „Let your Agent do
+it for you" (sinnvolle Defaults) und erledigt dann alles selbst.
 
 Danach pro Projekt eine Gedächtnis-Datei aus
 `templates/CLAUDE.md.template` anlegen — der größte Einzelhebel neben
