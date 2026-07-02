@@ -41,6 +41,7 @@ are the territory. **Load only the module you need, when you need it.**
 | Structuring prompts, system text, or API calls | [modules/caching.md](modules/caching.md) |
 | Writing responses, picking a model | [modules/output-discipline.md](modules/output-discipline.md) |
 | Proving the savings / pre-delivery check | [modules/measurement.md](modules/measurement.md) |
+| Making the rules mandatory (hooks, 24/7) / a guard blocked a call | [modules/enforcement.md](modules/enforcement.md) |
 
 ## Decision tree
 
@@ -77,6 +78,13 @@ Before delivering?
    models plan, cheap models execute, with an escalation rule as safety net.
 6. **Measurement & quality gate** — measure before/after per task; a saving
    only counts if the quality gate passes.
+
+Plus **layer 0, enforcement**: `install.sh` registers deterministic hooks
+(Claude Code) that inject the core rules every session and hard-block
+context-flooding tool calls — the layers above become mandatory, not
+advisory. If a "token-saver guard" message blocked one of your tool calls,
+follow the cheaper move it names; see
+[modules/enforcement.md](modules/enforcement.md) for overrides.
 
 ## Biggest levers first
 

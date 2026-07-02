@@ -32,25 +32,50 @@ account for most of the realistic 40-80% range. No miracle claims: your
 savings depend on workload; long-running projects with recurring sessions
 benefit most, one-shot trivia the least.
 
+## Enforced, not optional (24/7)
+
+Since v1.1.0 the skill has teeth: `install.sh` registers **deterministic
+Claude Code hooks** that run on every session and every tool call — the
+model cannot forget or skip them, and they cost zero tokens until violated:
+
+- A `PreToolUse` guard **blocks** context-flooding calls (reads of
+  `node_modules/`, lockfiles, minified bundles, unscoped reads of huge
+  files, unfiltered `cat` dumps) and answers every block with the cheaper
+  alternative, so the agent self-corrects in one step.
+- A `SessionStart` hook injects the ~20-line core rules into every session
+  — automatically skipped if your `CLAUDE.md` already carries them.
+- Escape hatches: `GARDENER_DISABLE=1`, `GARDENER_STRICT=1` (also blocks
+  unbounded `git log` / unfiltered test runs), one-shot `GARDENER_ALLOW=1`.
+
+No daemon needed — hooks are event-driven configuration, permanent without
+being resident. Details: [modules/enforcement.md](modules/enforcement.md).
+
 ## Installation
 
-### Claude Code
+### Claude Code (skill + enforcement hooks)
 
 ```bash
-git clone https://github.com/<your-account>/The-Gardener.git
-mkdir -p ~/.claude/skills
-cp -r The-Gardener ~/.claude/skills/token-saver
+git clone https://github.com/legifx/The-Gardener.git
+cd The-Gardener
+./install.sh
 ```
 
-Or per project: copy to `.claude/skills/token-saver/` inside the repo.
+Idempotent, backs up `settings.json` before touching it. Restart your
+Claude Code session afterwards so the hooks load.
 
 ### Hermes Agent (or other markdown-skill harnesses)
 
 ```bash
-cp -r The-Gardener ~/.hermes/skills/token-saver
+./install.sh --hermes --with-memory-block   # or --all for both harnesses
 ```
 
-Any harness that reads a `SKILL.md` with YAML frontmatter will pick it up.
+No hook API there, so `--with-memory-block` puts the core rules into the
+agent's memory file (`SOUL.md`) — always-on layer 2 instead of layer 1.
+Any harness that reads a `SKILL.md` with YAML frontmatter picks up the
+skill itself.
+
+Removal: `./uninstall.sh` (removes hooks, links, and marker-delimited
+blocks; backs up everything it modifies).
 
 ## Quickstart
 
@@ -71,7 +96,11 @@ done naively (~205k tokens, 2 fix attempts) vs. with the skill (~52k tokens,
 
 ```
 SKILL.md                     # entry point — the map
-modules/                     # the six layers, loaded on demand
+core-rules.md                # the always-on ~20-line rules block
+modules/                     # the six layers + enforcement, loaded on demand
+hooks/gardener_guard.py      # deterministic PreToolUse/SessionStart guard
+hooks/test_guard.sh          # guard self-tests
+install.sh / uninstall.sh    # skill link + hook registration (idempotent)
 templates/                   # project memory + session checkpoint starters
 examples/before-after.md     # fictional worked example (acme-shop)
 ```
@@ -86,8 +115,14 @@ Kernidee: Ein volles Kontextfenster verschlechtert die Modellleistung
 ("Context Rot"); Token-Hygiene ist daher Qualitätssicherung, nicht nur
 Kostensenkung.
 
-Installation: Repo klonen und nach `~/.claude/skills/token-saver`
-(Claude Code) bzw. `~/.hermes/skills/token-saver` (Hermes) kopieren.
+Seit v1.1.0 ist das Skill **verpflichtend statt optional**: `./install.sh`
+registriert deterministische Claude-Code-Hooks — ein `PreToolUse`-Guard
+blockiert kontextflutende Tool-Aufrufe (node_modules, Lockfiles, ungefilterte
+Dumps) und nennt dabei die günstigere Alternative; ein `SessionStart`-Hook
+lädt die Kernregeln automatisch in jede Session. Läuft 24/7 ohne Daemon,
+kostet 0 Token bis zum Verstoß. Notausgänge: `GARDENER_DISABLE=1`,
+`GARDENER_ALLOW=1`. Deinstallation: `./uninstall.sh`.
+
 Danach pro Projekt eine Gedächtnis-Datei aus
 `templates/CLAUDE.md.template` anlegen — der größte Einzelhebel neben
 Prompt-Caching. Details in den `modules/` (Englisch).
