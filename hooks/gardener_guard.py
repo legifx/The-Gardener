@@ -172,7 +172,8 @@ def session_start():
                 text = fh.read()
         except OSError:
             continue
-        if any(marker in text for marker in CORE_RULES_MARKERS):
+        lowered = text.lower()
+        if any(marker.lower() in lowered for marker in CORE_RULES_MARKERS):
             return  # rules are already always-on via memory file
     rules_path = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "..", "core-rules.md"

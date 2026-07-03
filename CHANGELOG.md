@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.1.1 — 2026-07-02
+
+### Fixed
+- Core-rules deduplication is now case-insensitive: an existing
+  "TOKEN EFFICIENCY" section (uppercase, e.g. in a SOUL.md) was not
+  detected, so `--with-memory-block` would have appended a duplicate
+  block and the SessionStart hook would have double-injected the rules.
+
+### Verified
+- End-to-end test in a fresh headless Claude Code session: forbidden
+  `node_modules/` Read and unfiltered lockfile `cat` are blocked by the
+  harness before execution; the agent receives the educational deny
+  message and never sees the file content.
+
 ## 1.1.0 — 2026-07-02
 
 ### Added

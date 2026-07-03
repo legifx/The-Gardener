@@ -48,7 +48,7 @@ link_skill() { # $1 = target skills dir
 }
 
 append_memory_block() { # $1 = memory file (CLAUDE.md / SOUL.md)
-  if [ -f "$1" ] && grep -q "gardener:core-rules\|Token Efficiency" "$1"; then
+  if [ -f "$1" ] && grep -qi "gardener:core-rules\|Token Efficiency" "$1"; then
     echo "  core rules already present in $1 (skipped)"
     return
   fi
